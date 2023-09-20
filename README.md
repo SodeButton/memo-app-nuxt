@@ -17,6 +17,30 @@ $ yarn start
 $ yarn generate
 ```
 
+## firebase setup
+### initialize
+```bash
+$ yarn generate
+$ firebase init hosting
+
+? Please select an option: Use an existing project
+? Select a default Firebase project for this directory: myproject (myproject)
+? What do you want to use as your public directory? dist
+? Configure as a single-page app (rewrite all urls to /index.html)? No
+? Set up automatic builds and deploys with GitHub? No
+✔  Wrote dist/404.html
+? File dist/index.html already exists. Overwrite? No
+```
+### test
+```bash
+$ yarn generate
+$ firebase serve --only hosting
+```
+
+### deploy
+```bash
+$ firebase deploy --only hosting
+```
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
 
 ## Special Directories
