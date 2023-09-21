@@ -1,13 +1,15 @@
 <template>
-  <v-container>
+  <v-container style="max-width: 600px" class="mt-2">
     <v-row>
-      <v-col>
-        <v-textarea class="text-h4 rounded-lg" filled auto-grow label="Title" rows="1" v-model="memoTitle">
-        </v-textarea>
-        <v-textarea class="text-h5 rounded-lg" filled auto-grow label="Memo Text" v-model="memoText">
-        </v-textarea>
+      <v-col cols="6">
         <v-btn @click="back()">もどる</v-btn>
+      </v-col>
+      <v-col cols="6" class="text-right">
         <v-btn @click="postMemo()">新規作成</v-btn>
+      </v-col>
+      <v-col cols="12">
+        <v-textarea class="rounded-lg" solo hide-details height="500px" no-resize placeholder="メモを作成する..." v-model="memoText">
+        </v-textarea>
       </v-col>
     </v-row>
   </v-container>
@@ -31,7 +33,6 @@ export default {
       const memoCollection = db.collection("memoData");
 
       try {
-
         const postData = {title: this.memoTitle, text: this.memoText, lastUpdate: this.$fireModule.firestore.Timestamp.now()}
         await memoCollection.add(postData);
         console.log(postData);
@@ -43,3 +44,20 @@ export default {
   }
 }
 </script>
+<style>
+::-webkit-scrollbar{
+  width: 10px;
+}
+::-webkit-scrollbar-track{
+  background: #fff;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  box-shadow: none;
+}
+::-webkit-scrollbar-thumb{
+  background: #888;
+  border-radius: 10px;
+  box-shadow: none;
+}
+</style>
