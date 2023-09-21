@@ -60,24 +60,6 @@ export default {
     create() {
       this.$router.push('/create');
     },
-    async getMemoData() {
-      const db = this.$fire.firestore;
-      const memoCollection = db.collection('memoData');
-
-      try {
-        const res = await memoCollection.orderBy('lastUpdate', 'desc').get();
-        const items = [];
-
-        res.forEach((doc) => {
-          items.push(doc.data());
-        });
-
-        return { items };
-      } catch(e) {
-        console.log(e);
-        return { items: [] };
-      }
-    }
   },
   mounted() {
     const db = this.$fire.firestore;
