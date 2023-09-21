@@ -28,7 +28,7 @@
       <v-col cols="12" class="text-center" v-if="memoData.length === 0 && !loading">
         <p class="grey--text ma-auto mt-10" style="max-width: 280px">上の新しいメモボタンをクリックしてメモを作成します</p>
       </v-col>
-      <v-col v-for="(item, index) in memoData" :v-key="index" cols="12" v-if="!loading">
+      <v-col v-for="(item, index) in memoData" :v-key="index" cols="12" v-if="memoData.length !== 0 && !loading">
         <v-card>
           <v-sheet
             max-width="100%"
@@ -36,8 +36,8 @@
             color="yellow darken-1"
           ></v-sheet>
 
-          <v-card-text class="white--text ">
-            {{item.text}}
+          <v-card-text class="white--text " v-html="item.text">
+
           </v-card-text>
         </v-card>
       </v-col>
@@ -46,12 +46,12 @@
 </template>
 
 <script>
+
 export default {
   name: 'IndexPage',
   data() {
     return {
       memoData: [],
-      unsubscribe: null,
       loading: true,
       search: '',
     }
@@ -65,20 +65,19 @@ export default {
     const db = this.$fire.firestore;
     const memoCollection = db.collection("memoData");
 
-    this.unsubscribe = memoCollection.orderBy("lastUpdate", "desc").onSnapshot((snapshot) => {
+    memoCollection.orderBy("lastUpdate", "desc").onSnapshot((snapshot) => {
       const items = [];
 
       snapshot.forEach((doc) => {
-        items.push(doc.data());
+        items.push({text: doc.data().text.replaceAll('\n','<br>')});
       });
 
       this.memoData = items;
     });
-    this.loading = false;
   },
-  beforeDestroy() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
+  watch: {
+    memoData: function () {
+      this.loading = false;
     }
   }
 }
