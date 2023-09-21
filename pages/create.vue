@@ -9,7 +9,6 @@
       </v-col>
       <v-col cols="12">
         <v-textarea
-          class="rounded-lg"
           solo
           hide-details
           rows="20"
