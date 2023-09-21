@@ -25,12 +25,18 @@
           width="5"
         ></v-progress-circular>
       </v-col>
-      <v-col cols="12" class="text-center" v-if="loading">
+      <v-col cols="12" class="text-center" v-if="memoData.length === 0 && !loading">
         <p class="grey--text ma-auto mt-10" style="max-width: 280px">上の新しいメモボタンをクリックしてメモを作成します</p>
       </v-col>
       <v-col v-for="(item, index) in memoData" :v-key="index" cols="12" v-if="!loading">
         <v-card>
-          <v-card-text>
+          <v-sheet
+            max-width="100%"
+            height="4px"
+            color="yellow darken-1"
+          ></v-sheet>
+
+          <v-card-text class="white--text ">
             {{item.text}}
           </v-card-text>
         </v-card>
