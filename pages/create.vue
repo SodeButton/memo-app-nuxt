@@ -5,10 +5,18 @@
         <v-btn @click="back()">もどる</v-btn>
       </v-col>
       <v-col cols="6" class="text-right">
-        <v-btn @click="postMemo()">新規作成</v-btn>
+        <v-btn @click="postMemo()" :disabled="memoText.length === 0">新規作成</v-btn>
       </v-col>
       <v-col cols="12">
-        <v-textarea class="rounded-lg" solo hide-details height="500px" no-resize placeholder="メモを作成する..." v-model="memoText">
+        <v-textarea
+          class="rounded-lg"
+          solo
+          hide-details
+          rows="20"
+          no-resize
+          placeholder="メモを作成する..."
+          v-model="memoText"
+        >
         </v-textarea>
       </v-col>
     </v-row>
@@ -24,16 +32,23 @@ export default {
       memoText: "",
     }
   },
+  mounted() {
+  },
   methods: {
     back() {
       this.$router.push('/');
     },
     async postMemo() {
+
+      if (this.memoText === "") {
+        return;
+      }
+
       const db = this.$fire.firestore;
       const memoCollection = db.collection("memoData");
 
       try {
-        const postData = {title: this.memoTitle, text: this.memoText, lastUpdate: this.$fireModule.firestore.Timestamp.now()}
+        const postData = {text: this.memoText, lastUpdate: this.$fireModule.firestore.Timestamp.now()}
         await memoCollection.add(postData);
         console.log(postData);
         await this.$router.push('/');
