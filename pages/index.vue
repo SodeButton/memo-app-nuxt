@@ -35,7 +35,9 @@
             height="4px"
             color="yellow darken-1"
           ></v-sheet>
-
+          <v-card-actions>
+            <v-btn plain class="align-content-end"><v-icon>mdi-dots-horizontal</v-icon></v-btn>
+          </v-card-actions>
           <v-card-text class="white--text " v-html="item.text">
 
           </v-card-text>
