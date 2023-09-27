@@ -29,38 +29,54 @@
         <p class="grey--text ma-auto mt-10" style="max-width: 280px">上の新しいメモボタンをクリックしてメモを作成します</p>
       </v-col>
       <v-col v-for="(item, index) in memoData" :v-key="index" cols="12" v-if="memoData.length !== 0 && !isLoading">
-        <v-card>
-          <v-sheet
-            max-width="100%"
-            height="4px"
-            color="yellow darken-1"
-          ></v-sheet>
-          <v-card-actions style="width: 100%; position:relative;">
-            <v-menu :offset-y="true" left bottom :close-on-click="true">
-              <template v-slot:activator="{on, attrs}">
-                <v-btn plain class="" :ripple="false" v-bind="attrs" v-on="on" icon absolute top right style="top:0; right:0;">
-                  <v-icon>mdi-dots-horizontal</v-icon>
-                </v-btn>
-              </template>
-              <v-list class="align-center">
-                <v-list-item link :href="'/edit?id='+item.id">
-                  <v-list-item-icon><v-icon>mdi-note-edit-outline</v-icon></v-list-item-icon>
-                  <v-list-item-title>メモを編集</v-list-item-title>
-                </v-list-item>
-                <v-list-item link href="/" @click="deleteMemo(item.id)">
-                  <v-list-item-icon><v-icon>mdi-trash-can-outline</v-icon></v-list-item-icon>
-                  <v-list-item-title>メモの削除</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-card-actions>
-          <v-card-text class="white--text">
-            <div v-for="(text, index) in item.texts" v-if="index <= 10">
-              <span v-if="index < 10">{{text}}<br></span>
-              <span v-if="index === 10">...</span>
+        <v-hover v-slot="{ hover }">
+          <v-card>
+            <v-sheet
+              max-width="100%"
+              height="4px"
+              color="yellow darken-1"
+            ></v-sheet>
+            <div v-if="!hover">
+              <p class="v-overlay--absolute" style="top:10px; right:0;">{{item.lastUpdate}}</p>
             </div>
-          </v-card-text>
-        </v-card>
+            <v-card-actions style="width: 100%; position:relative;">
+              <v-menu :offset-y="true" left bottom :close-on-click="true">
+                <template v-slot:activator="{on, attrs}">
+                  <v-btn
+                    :class="{'show-btns': hover}"
+                    plain
+                    :ripple="false"
+                    v-bind="attrs"
+                    v-on="on"
+                    icon
+                    absolute
+                    top
+                    right
+                    style="top:0; right:0; color: rgba(255, 255, 255, 0);"
+                  >
+                    <v-icon>mdi-dots-horizontal</v-icon>
+                  </v-btn>
+                </template>
+                <v-list class="align-center">
+                  <v-list-item link :href="'/edit?id='+item.id">
+                    <v-list-item-icon><v-icon>mdi-note-edit-outline</v-icon></v-list-item-icon>
+                    <v-list-item-title>メモを開く</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link href="/" @click="deleteMemo(item.id)">
+                    <v-list-item-icon><v-icon>mdi-trash-can-outline</v-icon></v-list-item-icon>
+                    <v-list-item-title>メモの削除</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-card-actions>
+            <v-card-text class="white--text">
+              <div v-for="(text, index) in item.texts" v-if="index <= 10">
+                <span v-if="index < 10">{{text}}<br></span>
+                <span v-if="index === 10">...</span>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-hover>
       </v-col>
     </v-row>
   </v-container>
@@ -102,8 +118,10 @@ export default {
         const items = [];
         snapshot.forEach((doc) => {
           const texts = doc.data().text.split("\n");
-          console.log(texts);
-          items.push({texts: texts, id: doc.id, lastUpdate: doc.data().lastUpdate});
+          console.log(doc.data().lastUpdate.seconds * 1000);
+          const date = doc.data().lastUpdate.toDate();
+          const lastUpdate = date.toLocaleString();
+          items.push({texts: texts, id: doc.id, lastUpdate: lastUpdate});
         });
 
         this.memoData = items;
@@ -120,3 +138,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.show-btns {
+  color: rgba(255, 255, 255, 255) !important;
+}
+</style>
